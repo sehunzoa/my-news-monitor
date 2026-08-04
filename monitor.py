@@ -9,19 +9,117 @@ from deep_translator import GoogleTranslator
 # 1. 监控网站配置文件（你可以随时修改/增加这里的网址和规则）
 # ------------------------------------------------------------------
 SITES = [
+    # 1. 界面新闻快报（动态滚动，时间与日期分离）
     {
-        "name": "Le Monde (示例法语网)",
-        "url": "https://www.lemonde.fr/",
-        "lang": "法语",
-        "scroll_times": 2,       # 自动向下滚动次数
-        "click_selector": None,  # 如果有"加载更多"按钮，填写 CSS 选择器，例如 "#load-more"
-        "item_selector": "section.teaser", # 文章卡片选择器
-        "title_selector": "h3",
+        "name": "界面新闻快报",
+        "url": "https://www.jiemian.com/lists/48.html",
+        "lang": "中文",
+        "scroll_times": 3,
+        "click_selector": None,
+        "item_selector": ".news-view, .card, div[class*='item']",
+        "title_selector": "a.title, h3, .news-header a",
         "link_selector": "a"
     },
-    # 你后续可以按上面的格式继续添加剩余 59 个网站
+    # 2. 科技日报（需要点击“下一页”或“加载更多”）
+    {
+        "name": "科技日报",
+        "url": "https://www.stdaily.com/web/gdxw/node_324.html",
+        "lang": "中文",
+        "scroll_times": 0,
+        "click_selector": "a:has-text('下一页'), .page-next, a.next",
+        "item_selector": "ul.list li, .news_list li, div.list-item",
+        "title_selector": "a",
+        "link_selector": "a"
+    },
+    # 3. 俄罗斯卫星通讯社（底部黄色按钮点击 + 无限滚动）
+    {
+        "name": "俄罗斯卫星通讯社",
+        "url": "https://sputniknews.cn/",
+        "lang": "中文",
+        "scroll_times": 3,
+        "click_selector": ".b-more_btn, button:has-text('加载更多'), div[class*='more']",
+        "item_selector": ".b-plainlist__item, .b-article, div[class*='item']",
+        "title_selector": "a.b-plainlist__title, .b-article__title, a",
+        "link_selector": "a"
+    },
+    # 4. 韩联社（点击下一页/加载更多）
+    {
+        "name": "韩联社 (能源/资源)",
+        "url": "https://www.yna.co.kr/industry/energy-resource",
+        "lang": "韩语",
+        "scroll_times": 1,
+        "click_selector": ".btn-more, a.next, a:has-text('더보기')",
+        "item_selector": "div.news-con, ul.list li, article",
+        "title_selector": "strong.tit, .tit, a",
+        "link_selector": "a"
+    },
+    # 5. 国际文传电讯（翻页获取更多）
+    {
+        "name": "国际文传电讯 (Top Stories)",
+        "url": "https://www.interfax.com/newsroom/top-stories/",
+        "lang": "英语",
+        "scroll_times": 0,
+        "click_selector": ".pagination .next, a:has-text('Next')",
+        "item_selector": ".news-item, .top-story, div.news",
+        "title_selector": "h3, a.title, a",
+        "link_selector": "a"
+    },
+    # 6. 白通社（白俄罗斯通讯社，时间/日期分离，翻页）
+    {
+        "name": "白通社 (白俄罗斯通讯社)",
+        "url": "https://chn.belta.by/all_news",
+        "lang": "中文",
+        "scroll_times": 0,
+        "click_selector": ".pager_next, .next, a:has-text('下一页')",
+        "item_selector": ".news_item, .news_list_item, div.news_item",
+        "title_selector": "a.news_item_title, a",
+        "link_selector": "a"
+    },
+    # 7. 哈通社（点击下一页获取更多）
+    {
+        "name": "哈通社",
+        "url": "https://cn.inform.kz/lenta/",
+        "lang": "中文",
+        "scroll_times": 0,
+        "click_selector": "a.next, .pagination-next, a:has-text('下一页')",
+        "item_selector": ".lenta-item, .news-item, article",
+        "title_selector": "a.title, h3, a",
+        "link_selector": "a"
+    },
+    # 8. 马尼拉时报
+    {
+        "name": "马尼拉时报",
+        "url": "https://www.manilatimes.net/news",
+        "lang": "英语",
+        "scroll_times": 2,
+        "click_selector": None,
+        "item_selector": ".article-item, .article-title-wrap, div.article",
+        "title_selector": "a.article-title, h3 a, a",
+        "link_selector": "a"
+    },
+    # 9. 有意思能源新闻 (Interesting Engineering)
+    {
+        "name": "Interesting Engineering (Energy)",
+        "url": "https://interestingengineering.com/energy",
+        "lang": "英语",
+        "scroll_times": 3,
+        "click_selector": "button:has-text('Load More'), .load-more",
+        "item_selector": "article, div[class*='Card']",
+        "title_selector": "h2, h3, a",
+        "link_selector": "a"
+    },
+    # 10. Medical Equipment Industry News (DOTmed)
+    {
+        "name": "DOTmed 医疗设备新闻",
+        "url": "https://www.dotmed.com/news/",
+        "lang": "英语",
+        "scroll_times": 2,
+        "click_selector": None,
+        "item_selector": ".news_item, .article, tr.news_row",
+        "title_selector": "a.news_title, h3, a",
+        "link_selector": "a"
+    }
 ]
-
 translator = GoogleTranslator(source='auto', target='zh-CN')
 
 async def scrape_site(site, page):
