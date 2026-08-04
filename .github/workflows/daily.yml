@@ -4,17 +4,21 @@ on:
   schedule:
     # 每天 UTC 0:00 (即北京时间每天上午 8:00) 自动触发运行
     - cron: '0 0 * * *'
-  workflow_dispatch: # 允许你随时手动点击按钮触发运行
+  workflow_dispatch: # 允许手动点击按钮触发
+
+# 给脚本授予写权限
+permissions:
+  contents: write
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: 检出代码
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 设置 Python 环境
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
@@ -28,7 +32,7 @@ jobs:
         run: python monitor.py
 
       - name: 自动把生成的网页提交并发布到 GitHub Pages
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Auto-update daily summary dashboard"
           file_pattern: "index.html"
